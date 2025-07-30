@@ -24,7 +24,7 @@ services:
       - "27017:27017"
     volumes:
       - mongo-data:/data/db
-  
+
   nginx:
     image: nginx:alpine
     container_name: reverse-proxy
@@ -38,6 +38,10 @@ services:
       - result
     networks:
       - front-tier
+
 volumes:
   mongo-data:
+
+networks:
+  front-tier:
 
