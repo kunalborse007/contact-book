@@ -1,21 +1,12 @@
-# Use official Node.js image
-FROM node:18
-
-# Set working directory inside the container
+# Build stage
+FROM node:18 as builder
 WORKDIR /app
-
-# Copy package.json and package-lock.json
 COPY package*.json ./
-
-# Install dependencies
 RUN npm install
-
-# Copy the rest of the code (like /src folder)
 COPY . .
+RUN npm run build
 
-# Expose React dev server port
-EXPOSE 3000
-
-# Start the development server
-CMD ["npm", "start"]
-
+# Serve stage
+FROM nginx:alpine
+RUN rm -rf /usr/share/nginx/html/*
+COPY --from=builder /app/build /usr/share/nginx/html
